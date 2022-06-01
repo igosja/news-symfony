@@ -3,37 +3,37 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Category;
+use App\Entity\Image;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * Class CategoryRepository
+ * Class ImageRepository
  * @package App\Repository
  *
- * @extends ServiceEntityRepository<Category>
+ * @extends ServiceEntityRepository<Image>
  *
- * @method Category|null find($id, $lockMode = null, $lockVersion = null)
- * @method Category|null findOneBy(array $criteria, array $orderBy = null)
- * @method Category[]    findAll()
- * @method Category[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Image|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Image|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Image[]    findAll()
+ * @method Image[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CategoryRepository extends ServiceEntityRepository
+class ImageRepository extends ServiceEntityRepository
 {
     /**
      * @param \Doctrine\Persistence\ManagerRegistry $registry
      */
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Category::class);
+        parent::__construct($registry, Image::class);
     }
 
     /**
-     * @param \App\Entity\Category $entity
+     * @param \App\Entity\Image $entity
      * @param bool $flush
      * @return void
      */
-    public function add(Category $entity, bool $flush = false): void
+    public function add(Image $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -43,11 +43,11 @@ class CategoryRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param \App\Entity\Category $entity
+     * @param \App\Entity\Image $entity
      * @param bool $flush
      * @return void
      */
-    public function remove(Category $entity, bool $flush = false): void
+    public function remove(Image $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -57,24 +57,24 @@ class CategoryRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return Category[] Returns an array of Category objects
+//     * @return Image[] Returns an array of Image objects
 //     */
 //    public function findByExampleField($value): array
 //    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
+//        return $this->createQueryBuilder('i')
+//            ->andWhere('i.exampleField = :val')
 //            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
+//            ->orderBy('i.id', 'ASC')
 //            ->setMaxResults(10)
 //            ->getQuery()
 //            ->getResult()
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Category
+//    public function findOneBySomeField($value): ?Image
 //    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
+//        return $this->createQueryBuilder('i')
+//            ->andWhere('i.exampleField = :val')
 //            ->setParameter('val', $value)
 //            ->getQuery()
 //            ->getOneOrNullResult()

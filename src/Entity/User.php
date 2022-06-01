@@ -13,7 +13,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @package App\Entity
  *
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @ORM\Table(name="user")
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -50,17 +49,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    /**
-     * @param int $id
-     * @return $this
-     */
-    public function setId(int $id): self
-    {
-        $this->id = $id;
-
-        return $this;
     }
 
     /**

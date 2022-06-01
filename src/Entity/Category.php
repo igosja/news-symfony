@@ -7,6 +7,9 @@ use App\Repository\CategoryRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * Class Category
+ * @package App\Entity
+ *
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
  */
 class Category
