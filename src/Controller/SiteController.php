@@ -50,6 +50,14 @@ class SiteController extends AbstractController
     }
 
     /**
+     * @Route("/logout", name="logout")
+     */
+    public function logout(): Response
+    {
+        throw new \RuntimeException('Will be intercepted before getting here');
+    }
+
+    /**
      * @Route("/signup", name="signup")
      *
      * @param \Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface $passwordHasher
