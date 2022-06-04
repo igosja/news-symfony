@@ -1,43 +1,79 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/base.html.twig' %}
 
-{% block title %}Language index{% endblock %}
+{% block title %}Languages{% endblock %}
 
 {% block body %}
-    <h1>Language index</h1>
+    <h1 class="text-center">Languages</h1>
 
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Id</th>
-            <th>Code</th>
-            <th>Created_at</th>
-            <th>Is_active</th>
-            <th>Name</th>
-            <th>Updated_at</th>
-            <th>actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for language in languages %}
-            <tr>
-                <td>{{ language.id }}</td>
-                <td>{{ language.code }}</td>
-                <td>{{ language.createdAt }}</td>
-                <td>{{ language.isActive ? 'Yes' : 'No' }}</td>
-                <td>{{ language.name }}</td>
-                <td>{{ language.updatedAt }}</td>
-                <td>
-                    <a href="{{ path('admin_language_view', {'id': language.id}) }}">View</a>
-                    <a href="{{ path('admin_language_update', {'id': language.id}) }}">Update</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="7">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <ul class="list-inline text-center">
+        <li class="list-inline-item">
+            <a class="btn btn-default" href="{{ path('admin_language_create') }}">Create</a>
+        </li>
+    </ul>
 
-    <a href="{{ path('admin_language_create') }}">Create</a>
+    <div class="row">
+        <div id="w0" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 table-responsive">
+            <div class="summary">
+                Показані <b>1-3</b> із <b>3</b> записів.
+            </div>
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th class="col-lg-1">
+                            <a class="desc" href="/admin/language?sort=id" data-sort="id">ID</a>
+                        </th>
+                        <th>
+                            <a href="/admin/language?sort=name" data-sort="name">Name</a>
+                        </th>
+                        <th>
+                            <a href="/admin/language?sort=code" data-sort="code">Code</a>
+                        </th>
+                        <th class="col-lg-3">
+                            <a href="/admin/language?sort=is_active" data-sort="is_active">Is active</a>
+                        </th>
+                        <th class="col-lg-1">&nbsp;</th>
+                    </tr>
+                    <tr id="w0-filters" class="filters">
+                        <td>
+                            <input type="text" class="form-control" name="id">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" name="name">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" name="code">
+                        </td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for language in languages %}
+                    <tr data-key="{{ language.id }}">
+                        <td>{{ language.id }}</td>
+                        <td>{{ language.name }}</td>
+                        <td>{{ language.code }}</td>
+                        <td>{{ language.isActive ? 'Yes' : 'No' }}</td>
+                        <td class="text-center">
+                            <a href="{{ path('admin_language_view', {'id': language.id}) }}" title="Переглянути" aria-label="Переглянути" data-pjax="0">
+                                <svg aria-hidden="true" style="display:inline-block;font-size:inherit;height:1em;overflow:visible;vertical-align:-.125em;width:1.125em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M573 241C518 136 411 64 288 64S58 136 3 241a32 32 0 000 30c55 105 162 177 285 177s230-72 285-177a32 32 0 000-30zM288 400a144 144 0 11144-144 144 144 0 01-144 144zm0-240a95 95 0 00-25 4 48 48 0 01-67 67 96 96 0 1092-71z"></path></svg>
+                            </a>
+                            <a href="{{ path('admin_language_update', {'id': language.id}) }}" title="Оновити" aria-label="Оновити" data-pjax="0">
+                                <svg aria-hidden="true" style="display:inline-block;font-size:inherit;height:1em;overflow:visible;vertical-align:-.125em;width:1em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M498 142l-46 46c-5 5-13 5-17 0L324 77c-5-5-5-12 0-17l46-46c19-19 49-19 68 0l60 60c19 19 19 49 0 68zm-214-42L22 362 0 484c-3 16 12 30 28 28l122-22 262-262c5-5 5-13 0-17L301 100c-4-5-12-5-17 0zM124 340c-5-6-5-14 0-20l154-154c6-5 14-5 20 0s5 14 0 20L144 340c-6 5-14 5-20 0zm-36 84h48v36l-64 12-32-31 12-65h36v48z"></path></svg>
+                            </a>
+                            <a href="{{ path('admin_language_delete', {'id': language.id}) }}" title="Видалити" aria-label="Видалити" data-pjax="0" data-confirm="Ви впевнені, що хочете видалити цей елемент?" data-method="post">
+                                <svg aria-hidden="true" style="display:inline-block;font-size:inherit;height:1em;overflow:visible;vertical-align:-.125em;width:.875em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M32 464a48 48 0 0048 48h288a48 48 0 0048-48V128H32zm272-256a16 16 0 0132 0v224a16 16 0 01-32 0zm-96 0a16 16 0 0132 0v224a16 16 0 01-32 0zm-96 0a16 16 0 0132 0v224a16 16 0 01-32 0zM432 32H312l-9-19a24 24 0 00-22-13H167a24 24 0 00-22 13l-9 19H16A16 16 0 000 48v32a16 16 0 0016 16h416a16 16 0 0016-16V48a16 16 0 00-16-16z"></path></svg>
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5">no records found</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <nav id="w1"></nav>
+        </div>
+    </div>
 {% endblock %}

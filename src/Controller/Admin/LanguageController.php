@@ -54,6 +54,8 @@ class LanguageController extends AbstractController
     public function create(Request $request, LanguageRepository $languageRepository): Response
     {
         $language = new Language();
+        $language->setCreatedAt(time());
+        $language->setUpdatedAt(time());
         $form = $this->createForm(LanguageForm::class, $language);
         $form->handleRequest($request);
 
@@ -79,6 +81,7 @@ class LanguageController extends AbstractController
      */
     public function update(Request $request, Language $language, LanguageRepository $languageRepository): Response
     {
+        $language->setUpdatedAt(time());
         $form = $this->createForm(LanguageForm::class, $language);
         $form->handleRequest($request);
 
@@ -104,9 +107,7 @@ class LanguageController extends AbstractController
      */
     public function delete(Request $request, Language $language, LanguageRepository $languageRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $language->getId(), $request->request->get('_token'))) {
-            $languageRepository->remove($language, true);
-        }
+        $languageRepository->remove($language, true);
 
         return $this->redirectToRoute('admin_language', [], Response::HTTP_SEE_OTHER);
     }
