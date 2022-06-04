@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Language index{% endblock %}
+
+{% block body %}
+    <h1>Language index</h1>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Code</th>
+            <th>Created_at</th>
+            <th>Is_active</th>
+            <th>Name</th>
+            <th>Updated_at</th>
+            <th>actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for language in languages %}
+            <tr>
+                <td>{{ language.id }}</td>
+                <td>{{ language.code }}</td>
+                <td>{{ language.createdAt }}</td>
+                <td>{{ language.isActive ? 'Yes' : 'No' }}</td>
+                <td>{{ language.name }}</td>
+                <td>{{ language.updatedAt }}</td>
+                <td>
+                    <a href="{{ path('admin_language_view', {'id': language.id}) }}">View</a>
+                    <a href="{{ path('admin_language_update', {'id': language.id}) }}">Update</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('admin_language_create') }}">Create</a>
+{% endblock %}
