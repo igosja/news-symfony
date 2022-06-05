@@ -21,13 +21,29 @@ class LanguageController extends AbstractController
     /**
      * @Route("", name="admin_language")
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param \App\Repository\LanguageRepository $languageRepository
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function index(LanguageRepository $languageRepository): Response
+    public function index(Request $request, LanguageRepository $languageRepository): Response
     {
+        $filterUrl = $this->getFilterUrl('admin_language', $request);
+        $languages = $languageRepository->findByFilters(
+            $request->query->all(),
+            $this->getSortingCriteria($request),
+            $this->itemsPerPage,
+            $this->getOffset($request)
+        );
+        $totalCount = count($languageRepository->findByFilters($request->query->all(), $this->getSortingCriteria($request)));
+        $pages = $this->getPaginationPages($request, $totalCount);
+        $paginationUrl = $this->getPaginationUrl('admin_language', $request);
+
         return $this->render('admin/language/index.html.twig', [
-            'languages' => $languageRepository->findAll(),
+            'filter_url' => $filterUrl,
+            'languages' => $languages,
+            'pages' => $pages,
+            'pagination_url' => $paginationUrl,
+            'total_count' => $totalCount,
         ]);
     }
 
@@ -100,12 +116,11 @@ class LanguageController extends AbstractController
     /**
      * @Route("/delete/{id}", name="admin_language_delete")
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param \App\Entity\Language $language
      * @param \App\Repository\LanguageRepository $languageRepository
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function delete(Request $request, Language $language, LanguageRepository $languageRepository): Response
+    public function delete(Language $language, LanguageRepository $languageRepository): Response
     {
         $languageRepository->remove($language, true);
 

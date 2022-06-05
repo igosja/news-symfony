@@ -5,7 +5,11 @@ namespace App\Repository;
 
 use App\Entity\Language;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Query\Parameter;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 /**
  * @extends ServiceEntityRepository<Language>
@@ -38,6 +42,43 @@ class LanguageRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function findByFilters(array $criteria = [], array $orderBy = null, $limit = null, $offset = null)
+    {
+        $query = $this->createQueryBuilder('l');
+
+        $parameters = [];
+        foreach ($criteria as $key => $value) {
+            if ('' === $value) {
+                continue;
+            }
+
+            if ('id' === $key) {
+                $query->andWhere('l.id = :id');
+                $parameters[] = new Parameter('id', $value, Types::INTEGER);
+            } elseif ('name' === $key) {
+                $query->andWhere('l.name LIKE :name');
+                $parameters[] = new Parameter('name', '%' . $value . '%', Types::STRING);
+            } elseif ('code' === $key) {
+                $query->andWhere('l.code LIKE :code');
+                $parameters[] = new Parameter('code', '%' . $value . '%', Types::STRING);
+            }
+        }
+
+        if ($parameters) {
+            $query->setParameters(new ArrayCollection($parameters));
+        }
+
+        if ($orderBy) {
+            $query->addOrderBy('l.'.$orderBy['sort'], $orderBy['order']);
+        }
+
+        return $query
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
     }
 
 //    /**
