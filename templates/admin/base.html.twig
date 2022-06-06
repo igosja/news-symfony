@@ -35,6 +35,14 @@
                             <a class="nav-link active" href="{{ path('admin_language') }}">Languages</a>
                         </li>
                     </ul>
+                    <form class="d-flex" method="post">
+                        <select class="form-control" name="language" onchange="submit()">
+                            <option value="">No</option>
+                            <option value="en">en</option>
+                            <option value="ru">ru</option>
+                            <option value="uk">uk</option>
+                        </select>
+                    </form>
                     <a class="btn btn-link logout text-decoration-none" href="{{ path('logout') }}">Logout</a>
                 </div>
             </div>
