@@ -6,7 +6,6 @@ namespace App\Controller\Admin;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as BaseController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Translation\LocaleSwitcher;
 
 /**
  * Class AbstractController
@@ -16,14 +15,6 @@ abstract class AbstractController extends BaseController
 {
     protected int $pagesAroundCurrent = 4;
     protected int $itemsPerPage = 1;
-
-    public function __construct(LocaleSwitcher $localeSwitcher)
-    {
-        $request = Request::createFromGlobals();
-        if ($request->get('language')) {
-            $localeSwitcher->setLocale($request->get('language'));
-        }
-    }
 
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request

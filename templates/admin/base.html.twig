@@ -37,10 +37,9 @@
                     </ul>
                     <form class="d-flex" method="post">
                         <select class="form-control" name="language" onchange="submit()">
-                            <option value="">No</option>
-                            <option value="en">en</option>
-                            <option value="ru">ru</option>
-                            <option value="uk">uk</option>
+                            <option value="en" {% if 'en' == app.request.locale %}selected{% endif %}>en</option>
+                            <option value="ru" {% if 'ru' == app.request.locale %}selected{% endif %}>ru</option>
+                            <option value="uk" {% if 'uk' == app.request.locale %}selected{% endif %}>uk</option>
                         </select>
                     </form>
                     <a class="btn btn-link logout text-decoration-none" href="{{ path('logout') }}">Logout</a>

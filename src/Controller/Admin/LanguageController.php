@@ -9,12 +9,13 @@ use App\Repository\LanguageRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class SiteController
  * @package App\Admin\Controller
  *
- * @Route("/admin/language")
+ * @Route("/admin/{_locale}/language")
  */
 class LanguageController extends AbstractController
 {
@@ -25,7 +26,7 @@ class LanguageController extends AbstractController
      * @param \App\Repository\LanguageRepository $languageRepository
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function index(Request $request, LanguageRepository $languageRepository): Response
+    public function index(Request $request, LanguageRepository $languageRepository, TranslatorInterface $translator): Response
     {
         $filterUrl = $this->getFilterUrl('admin_language', $request);
         $languages = $languageRepository->findByFilters(
