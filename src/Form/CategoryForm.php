@@ -3,15 +3,16 @@ declare(strict_types=1);
 
 namespace App\Form;
 
-use App\Entity\Language;
+use App\Entity\Category;
+use App\Form\Type\TranslationJsonType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class LanguageForm
+ * Class CategoryForm
  * @package App\Form
  */
-class LanguageForm extends AbstractForm
+class CategoryForm extends AbstractForm
 {
     /**
      * @param \Symfony\Component\Form\FormBuilderInterface $builder
@@ -22,7 +23,7 @@ class LanguageForm extends AbstractForm
     {
         $builder
             ->add('name')
-            ->add('code')
+            ->add('translation', TranslationJsonType::class)
             ->add('is_active');
     }
 
@@ -33,7 +34,7 @@ class LanguageForm extends AbstractForm
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Language::class,
+            'data_class' => Category::class,
         ]);
     }
 }

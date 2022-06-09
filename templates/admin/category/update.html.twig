@@ -1,0 +1,17 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Update category{% endblock %}
+
+{% block body %}
+    <h1 class="text-center">Update category</h1>
+    <ul class="list-inline text-center">
+        <li class="list-inline-item">
+            <a class="btn btn-default" href="{{ path('admin_category') }}">List</a>
+        </li>
+        <li class="list-inline-item">
+            <a class="btn btn-default" href="{{ path('admin_category_view', {'id': category.id}) }}">View</a>
+        </li>
+    </ul>
+
+    {{ include('admin/category/_form.html.twig') }}
+{% endblock %}

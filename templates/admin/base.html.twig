@@ -23,23 +23,32 @@
         <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
             <div class="container">
                 <a class="navbar-brand" href="{{ path('admin_home') }}">My Application</a>
-                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#w2-collapse" aria-controls="w2-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#w2-collapse"
+                        aria-controls="w2-collapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div id="w2-collapse" class="collapse navbar-collapse">
                     <ul class="navbar-nav me-auto mb-2 mb-md-0 nav">
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ path('admin_home') }}">Home</a>
+                            <a class="nav-link" href="{{ path('admin_home') }}">{% trans %}Home{% endtrans %}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" href="{{ path('admin_language') }}">Languages</a>
+                            <a class="nav-link active"
+                               href="{{ path('admin_category') }}">{% trans %}Categories{% endtrans %}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active"
+                               href="{{ path('admin_language') }}">{% trans %}Languages{% endtrans %}</a>
                         </li>
                     </ul>
                     <form class="d-flex" method="post">
                         <select class="form-control" name="language" onchange="submit()">
-                            <option value="en" {% if 'en' == app.request.locale %}selected{% endif %}>en</option>
-                            <option value="ru" {% if 'ru' == app.request.locale %}selected{% endif %}>ru</option>
-                            <option value="uk" {% if 'uk' == app.request.locale %}selected{% endif %}>uk</option>
+                            {% for language in db_languages %}
+                                <option value="{{ language }}"
+                                        {% if language == app.request.locale %}selected{% endif %}>
+                                    {{ language }}
+                                </option>
+                            {% endfor %}
                         </select>
                     </form>
                     <a class="btn btn-link logout text-decoration-none" href="{{ path('logout') }}">Logout</a>

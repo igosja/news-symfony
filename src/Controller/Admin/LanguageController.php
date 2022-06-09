@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * Class SiteController
+ * Class LanguageController
  * @package App\Admin\Controller
  *
  * @Route("/admin/{_locale}/language")
