@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * Class SiteController
+ * Class CategoryControllerw
  * @package App\Admin\Controller
  *
  * @Route("/admin/{_locale}/category")

@@ -5,11 +5,12 @@ namespace App\Form\Type;
 
 use App\Repository\LanguageRepository;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TranslationJsonType extends AbstractType
 {
-
     /**
      * @var \App\Repository\LanguageRepository $languageRepository
      */
@@ -33,7 +34,20 @@ class TranslationJsonType extends AbstractType
         $languages = $this->languageRepository->findAll();
 
         foreach ($languages as $language) {
-            $builder->add($language->getCode());
+            $builder->add($language->getCode(), $options['type']);
         }
+    }
+
+    /**
+     * @param \Symfony\Component\OptionsResolver\OptionsResolver $resolver
+     * @return void
+     */
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'type' => TextType::class,
+        ]);
+        $resolver->setAllowedTypes('type', 'string');
+        parent::configureOptions($resolver);
     }
 }

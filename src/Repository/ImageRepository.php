@@ -6,6 +6,7 @@ namespace App\Repository;
 use App\Entity\Image;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 /**
  * Class ImageRepository
@@ -21,10 +22,17 @@ use Doctrine\Persistence\ManagerRegistry;
 class ImageRepository extends ServiceEntityRepository
 {
     /**
-     * @param \Doctrine\Persistence\ManagerRegistry $registry
+     * @var \Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface
      */
-    public function __construct(ManagerRegistry $registry)
+    private ParameterBagInterface $parameterBag;
+
+    /**
+     * @param \Doctrine\Persistence\ManagerRegistry $registry
+     * @param \Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface $parameterBag
+     */
+    public function __construct(ManagerRegistry $registry, ParameterBagInterface $parameterBag)
     {
+        $this->parameterBag = $parameterBag;
         parent::__construct($registry, Image::class);
     }
 
@@ -49,6 +57,10 @@ class ImageRepository extends ServiceEntityRepository
      */
     public function remove(Image $entity, bool $flush = false): void
     {
+        if ($entity->getPath()) {
+            unlink($this->parameterBag->get('upload_directory') . '/' . $entity->getPath());
+        }
+
         $this->getEntityManager()->remove($entity);
 
         if ($flush) {

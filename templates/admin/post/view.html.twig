@@ -1,0 +1,81 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ post.name }}{% endblock %}
+
+{% block body %}
+    <h1 class="text-center">{{ post.name }}</h1>
+    <ul class="list-inline text-center">
+        <li class="list-inline-item">
+            <a class="btn btn-default" href="{{ path('admin_post') }}">List</a>
+        </li>
+        <li class="list-inline-item">
+            <a class="btn btn-default" href="{{ path('admin_post_update', {'id': post.id}) }}">Update</a>
+        </li>
+        <li class="list-inline-item">
+            <a class="btn btn-default" href="{{ path('admin_post_delete', {'id': post.id}) }}"
+               data-confirm="Are you sure?">Delete</a>
+        </li>
+    </ul>
+    <div class="row">
+        <table class="table table-striped table-bordered detail-view">
+            <tbody>
+            <tr>
+                <th>ID</th>
+                <td>{{ post.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ post.name }}</td>
+            </tr>
+            <tr>
+                <th>Url</th>
+                <td>{{ post.url }}</td>
+            </tr>
+            <tr>
+                <th>Category</th>
+                <td>{{ post.category.name }}</td>
+            </tr>
+            <tr>
+                <th>Image</th>
+                <td>
+                    {% if post.image %}
+                        <img alt="img" src="/uploads/{{ post.image.path }}" class="img-fluid">
+                    {% endif %}
+                </td>
+            </tr>
+            {% for translation_language in translation_languages %}
+                <tr>
+                    <th>Translation title ({{ translation_language.code }})</th>
+                    <td>{{ post.translationTitle[translation_language.code] }}</td>
+                </tr>
+            {% endfor %}
+            {% for translation_language in translation_languages %}
+                <tr>
+                    <th>Translation text ({{ translation_language.code }})</th>
+                    <td>{{ post.translationText[translation_language.code] }}</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <th>Is active</th>
+                <td>{{ post.isActive ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Created at</th>
+                <td>{{ post.createdAt|date }}</td>
+            </tr>
+            <tr>
+                <th>Created by</th>
+                <td>{{ post.createdBy.username }}</td>
+            </tr>
+            <tr>
+                <th>Updated at</th>
+                <td>{{ post.updatedAt|date }}</td>
+            </tr>
+            <tr>
+                <th>Updated at</th>
+                <td>{{ post.updatedBy.username }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
