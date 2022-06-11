@@ -307,4 +307,16 @@ class Post
 
         return $this;
     }
+
+    /**
+     * @return int
+     */
+    public function rating(): int
+    {
+        $result = 0;
+        foreach ($this->ratings as $rating) {
+            $result += $rating->getValue();
+        }
+        return $result;
+    }
 }

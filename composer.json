@@ -29,7 +29,8 @@
     "symfony/translation": "6.1.*",
     "symfony/twig-bundle": "6.1.*",
     "symfony/validator": "6.1.*",
-    "symfony/yaml": "6.1.*"
+    "symfony/yaml": "6.1.*",
+    "ext-gd": "*"
   },
   "config": {
     "allow-plugins": {

@@ -5,6 +5,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use Doctrine\Persistence\ManagerRegistry;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -18,22 +19,29 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class SiteController extends AbstractController
 {
     /**
-     * @Route("", name="home")
+     * @Route("", name="home_no_locale")
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function indexNoLocale(Request $request): Response
+    {
+        return $this->redirectToRoute('home', ['_locale' => $request->getLocale()]);
+    }
+
+    /**
+     * @Route("/{_locale}", name="home")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Exception
      */
     public function index(): Response
     {
-        $number = random_int(0, 100);
-
-        return $this->render('site/index.html.twig', [
-            'number' => $number,
-        ]);
+        return $this->redirectToRoute('post');
     }
 
     /**
-     * @Route("/login", name="login")
+     * @Route("/{_locale}/login", name="login")
      *
      * @param \Symfony\Component\Security\Http\Authentication\AuthenticationUtils $authenticationUtils
      * @return \Symfony\Component\HttpFoundation\Response
@@ -50,17 +58,19 @@ class SiteController extends AbstractController
     }
 
     /**
-     * @Route("/logout", name="logout")
+     * @Route("/{_locale}/logout", name="logout")
      */
     public function logout(): Response
     {
-        throw new \RuntimeException('Will be intercepted before getting here');
+        throw new RuntimeException('Will be intercepted before getting here');
     }
 
     /**
      * @Route("/signup", name="signup")
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param \Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface $passwordHasher
+     * @param \Doctrine\Persistence\ManagerRegistry $doctrine
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function signup(Request $request, UserPasswordHasherInterface $passwordHasher, ManagerRegistry $doctrine): Response

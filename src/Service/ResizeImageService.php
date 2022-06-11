@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use common\helpers\ImageHelper;
-use common\interfaces\ExecuteInterface;
-use common\models\db\Image;
-use common\models\db\Resize;
+use App\Entity\Image;
+use App\Entity\Resize;
+use App\Helper\ImageHelper;
+use App\Repository\ResizeRepository;
 use RuntimeException;
-use Yii;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 /**
  * Class ResizeImageService
@@ -17,66 +17,66 @@ use Yii;
 class ResizeImageService
 {
     /**
-     * @var int $_height
+     * @var int $height
      */
-    private int $_height;
+    private int $height;
 
     /**
-     * @var \common\models\db\Image|null $_image
+     * @var \App\Entity\Image|null $image
      */
-    private ?Image $_image = null;
+    private ?Image $image;
 
     /**
-     * @var int $_image_id
+     * @var \App\Entity\Resize|null $resize
      */
-    private int $_image_id;
+    private ?Resize $resize = null;
 
     /**
-     * @var \common\models\db\Resize|null $_resize
+     * @var int $width
      */
-    private ?Resize $_resize = null;
+    private int $width;
 
     /**
-     * @var string $_resize_path
+     * @var \App\Repository\ResizeRepository $resizeRepository
      */
-    private string $_resize_path = '';
+    private ResizeRepository $resizeRepository;
 
     /**
-     * @var int $_width
+     * @var \Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface
      */
-    private int $_width;
+    private ParameterBagInterface $parameterBag;
 
     /**
-     * @param int $image_id
-     * @param int $width
-     * @param int $height
+     * @param \App\Repository\ResizeRepository $resizeRepository
+     * @param \Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface $parameterBag
      */
-    public function __construct(int $image_id, int $width, int $height)
+    public function __construct(ResizeRepository $resizeRepository, ParameterBagInterface $parameterBag)
     {
-        $this->_image_id = $image_id;
-        $this->_height = $height;
-        $this->_width = $width;
+        $this->resizeRepository = $resizeRepository;
+        $this->parameterBag = $parameterBag;
     }
 
     /**
-     * @return bool
+     * @param \App\Entity\Image $image
+     * @param int $width
+     * @param int $height
+     * @return string
      */
-    public function execute(): bool
+    public function execute(Image $image, int $width, int $height): string
     {
+        $this->image = $image;
+        $this->height = $height;
+        $this->width = $width;
+
         $this->loadResize();
-        if ($this->_resize) {
-            return true;
+        if ($this->resize) {
+            return $this->resize->getPath();
         }
 
-        $size_h = $this->_height;
-        $size_w = $this->_width;
+        $size_h = $this->height;
+        $size_w = $this->width;
 
-        $this->loadImage();
-        if (!$this->_image) {
-            return true;
-        }
-
-        $image_path = Yii::getAlias('@frontend') . '/web' . $this->_image->path;
+        $image_path = $this->parameterBag->get('upload_directory') . '/' . $this->image->getPath();
         $image_info = getimagesize($image_path);
 
         [$image_width, $image_height] = $image_info;
@@ -108,12 +108,10 @@ class ResizeImageService
 
         $path = ImageHelper::generatePath();
 
-        $upload_dir = Yii::getAlias('@frontend') . '/web/upload/' . implode('/', $path);
+        $upload_dir = $this->parameterBag->get('upload_directory') . '/' . implode('/', $path);
 
-        if (!is_dir($upload_dir)) {
-            if (!mkdir($upload_dir, 0777, true) && !is_dir($upload_dir)) {
-                throw new RuntimeException(sprintf('Directory "%s" was not created', $upload_dir));
-            }
+        if (!is_dir($upload_dir) && !mkdir($upload_dir, 0777, true) && !is_dir($upload_dir)) {
+            throw new RuntimeException(sprintf('Directory "%s" was not created', $upload_dir));
         }
 
         $file_url = $upload_dir . '/' . $file_name;
@@ -138,9 +136,10 @@ class ResizeImageService
 
         imagedestroy($im);
 
-        $this->_resize_path = str_replace(Yii::getAlias('@frontend') . '/web', '', $file_url);
+        $file_path = str_replace($this->parameterBag->get('upload_directory') . '/', '', $file_url);
+        $this->saveResize($file_path);
 
-        return $this->saveResize();
+        return $file_path;
     }
 
     /**
@@ -148,51 +147,26 @@ class ResizeImageService
      */
     private function loadResize(): void
     {
-        $this->_resize = Resize::find()
-            ->andWhere([
-                'height' => $this->_height,
-                'image_id' => $this->_image_id,
-                'width' => $this->_width,
-            ])
-            ->one();
+        $this->resize = $this->resizeRepository->findOneBy([
+            'height' => $this->height,
+            'image' => $this->image,
+            'width' => $this->width,
+        ]);
     }
 
     /**
+     * @param string $file_url
      * @return void
      */
-    private function loadImage(): void
+    private function saveResize(string $file_url): void
     {
-        $this->_image = Image::find()
-            ->andWhere(['id' => $this->_image_id])
-            ->one();
-    }
-
-    /**
-     * @return bool
-     */
-    private function saveResize(): bool
-    {
-        $this->_resize = new Resize();
-        $this->_resize->height = $this->_height;
-        $this->_resize->image_id = $this->_image_id;
-        $this->_resize->path = $this->_resize_path;
-        $this->_resize->width = $this->_width;
-        return $this->_resize->save();
-    }
-
-    /**
-     * @return \common\models\db\Image|null
-     */
-    public function getImage(): ?Image
-    {
-        return $this->_image;
-    }
-
-    /**
-     * @return \common\models\db\Resize|null
-     */
-    public function getResize(): ?Resize
-    {
-        return $this->_resize;
+        $this->resize = new Resize();
+        $this->resize->setCreatedAt(time());
+        $this->resize->setUpdatedAt(time());
+        $this->resize->setHeight($this->height);
+        $this->resize->setImage($this->image);
+        $this->resize->setPath($file_url);
+        $this->resize->setWidth($this->width);
+        $this->resizeRepository->add($this->resize, true);
     }
 }

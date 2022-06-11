@@ -55,6 +55,7 @@ class PostController extends AbstractController
      * @Route("/view/{id}", name="admin_post_view")
      *
      * @param \App\Entity\Post $post
+     * @param \App\Repository\LanguageRepository $languageRepository
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function view(Post $post, LanguageRepository $languageRepository): Response

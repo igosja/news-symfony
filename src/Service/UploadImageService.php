@@ -6,7 +6,7 @@ namespace App\Service;
 use App\Entity\Image;
 use App\Helper\ImageHelper;
 use App\Repository\ImageRepository;
-use http\Exception\RuntimeException;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class UploadImageService
@@ -34,10 +34,8 @@ class UploadImageService
         $file_name = substr(md5(uniqid('', true)), -20) . '.' . $file->guessExtension();
         $path = ImageHelper::generatePath();
         $upload_dir = $directory . '/' . implode('/', $path);
-        if (!is_dir($upload_dir)) {
-            if (!mkdir($upload_dir, 0777, true) && !is_dir($upload_dir)) {
-                throw new RuntimeException(sprintf('Directory "%s" was not created', $upload_dir));
-            }
+        if (!is_dir($upload_dir) && !mkdir($upload_dir, 0777, true) && !is_dir($upload_dir)) {
+            throw new RuntimeException(sprintf('Directory "%s" was not created', $upload_dir));
         }
 
         $upload_url = $upload_dir . '/' . $file_name;

@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Posts{% endtrans %}{% endblock %}
+
+{% block body %}
+    <div class="site-index">
+        <h1 class="text-center">Posts</h1>
+        <ul class="list-inline text-center">
+            {% for category in categories %}
+                <li class="list-inline-item">
+                    <a href="{{ path('post', {'category_id': category.id}) }}">
+                        {{ category.translation[app.request.locale] }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+        <div class="list-view">
+            {% for post in posts %}
+                <div data-key="{{ post.id }}">
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-xs-12 rounded">
+                        <div class="row">
+                            <div class="col-12">
+                                {% if post.image %}
+                                    <img class="img-fluid"
+                                         src="/uploads/{{ image_helper.resize(post.image, 569, 320) }}"
+                                         alt="{{ post.translationTitle[app.request.locale] }}">
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 small text-muted">
+                                {{ post.createdAt|date }}
+                                (<strong>{{ post.createdBy.username }}</strong>)
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 text-truncate">
+                                {{ post.translationText[app.request.locale] }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <a class="btn btn-outline-secondary" href="{{ path('post_view', {'url': post.url}) }}">
+                                    Read
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

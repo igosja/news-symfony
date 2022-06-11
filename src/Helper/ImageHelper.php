@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace App\Helper;
 
-use common\services\ResizeImageService;
+use App\Entity\Image;
+use App\Service\ResizeImageService;
 
 /**
  * Class ImageHelper
@@ -12,20 +13,29 @@ use common\services\ResizeImageService;
 class ImageHelper
 {
     /**
-     * <img src="<?= ImageHelper::resize($image_id, $width, $height); ?>">
+     * @var \App\Service\ResizeImageService
+     */
+    private ResizeImageService $resizeImageService;
+
+    /**
+     * @param \App\Service\ResizeImageService $resizeImageService
+     */
+    public function __construct(ResizeImageService $resizeImageService)
+    {
+        $this->resizeImageService = $resizeImageService;
+    }
+
+    /**
+     * <img src="<?= ImageHelper()->resize($image, $width, $height); ?>">
      *
-     * @param int $image_id
+     * @param \App\Entity\Image $image
      * @param int $width
      * @param int $height
      * @return string
      */
-    public static function resize(int $image_id, int $width, int $height): string
+    public function resize(Image $image, int $width, int $height): string
     {
-        $service = new ResizeImageService($image_id, $width, $height);
-        if (!$service->execute()) {
-            return $service->getImage()->path ?: '';
-        }
-        return $service->getResize()->path;
+        return $this->resizeImageService->execute($image, $width, $height);
     }
 
     /**
