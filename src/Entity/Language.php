@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -54,6 +55,8 @@ class Language
     private $updated_at;
 
     /**
+     * @Ignore()
+     *
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="language", orphanRemoval=true)
      */
     private $comments;

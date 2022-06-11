@@ -107,6 +107,9 @@
     "phpspec/prophecy": {
         "version": "v1.15.0"
     },
+    "phpstan/phpdoc-parser": {
+        "version": "1.6.2"
+    },
     "phpunit/php-code-coverage": {
         "version": "9.2.15"
     },
@@ -404,6 +407,9 @@
     },
     "symfony/security-http": {
         "version": "v6.1.0"
+    },
+    "symfony/serializer": {
+        "version": "v6.1.1"
     },
     "symfony/service-contracts": {
         "version": "v3.1.0"
