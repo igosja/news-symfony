@@ -29,7 +29,7 @@ class Resize
     private $height;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Image::class)
+     * @ORM\ManyToOne(targetEntity=Image::class, inversedBy="resizes")
      * @ORM\JoinColumn(nullable=false)
      */
     private $image;

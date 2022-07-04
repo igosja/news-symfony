@@ -31,6 +31,10 @@
                             <div class="col-12 small text-muted">
                                 {{ post.createdAt|date }}
                                 (<strong>{{ post.createdBy.username }}</strong>)
+                                |
+                                Views: {{ post.views }}
+                                |
+                                Comments: {{ post.comments|length }}
                             </div>
                         </div>
                         <div class="row">

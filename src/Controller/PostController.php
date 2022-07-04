@@ -61,14 +61,18 @@ class PostController extends AbstractController
      * @Route("/{url}", name="post_view")
      *
      * @param \App\Entity\Post $post
+     * @param \App\Repository\PostRepository $postRepository
      * @param \App\Repository\CommentRepository $commentRepository
      * @param \App\Repository\LanguageRepository $languageRepository
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param \App\Helper\ImageHelper $imageHelper
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function view(Post $post, CommentRepository $commentRepository, LanguageRepository $languageRepository, Request $request, ImageHelper $imageHelper): Response
+    public function view(Post $post, PostRepository $postRepository, CommentRepository $commentRepository, LanguageRepository $languageRepository, Request $request, ImageHelper $imageHelper): Response
     {
+        $post->setViews($post->getViews() + 1);
+        $postRepository->add($post, true);
+
         $language = $languageRepository->findOneBy(['code' => $request->getLocale()]);
         $comments = $commentRepository->findBy(['post' => $post, 'language' => $language]);
 
